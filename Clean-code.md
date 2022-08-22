@@ -11,7 +11,7 @@
 7. Публичные методы экземпляра класса
 8. Приватные методы экземпляра класса
 
-```
+```Swift
 //MARK: - IB Outlets
 //MARK: - Public Properties
 //MARK: - Private Properties
