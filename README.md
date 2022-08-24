@@ -3,3 +3,4 @@
 - [Clean Code: Оформление и структура класса](Clean-code.md)
 - [Работа с сетью](Networking.md)
 - [Жизненный цикл ViewController](ViewControllerLifecycle.md)
+- [Делегаты в Swift](Delegate.md)
