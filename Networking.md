@@ -29,7 +29,6 @@ var posts = [Post]()
 
 ```Swift
 func fetchData() {
-    
     // URL - Значение, определяющее расположение ресурса, например элемент на удаленном сервере или путь к локальному файлу.
     if let url = URL(string: "https://hn.algolia.com/api/v1/search?tags=front_page") {
         
@@ -55,8 +54,7 @@ func fetchData() {
 ### 5. Метод по декодированию пришедших данных из формата data в JSON:
 
 ```Swift
-func decodeData(data: Data?) {
-    
+func decodeData(data: Data?) { 
     // JSONDecoder() - Объект, который декодирует экземпляры типа данных из объектов JSON.
     let decoder = JSONDecoder()
     
