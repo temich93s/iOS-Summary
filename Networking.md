@@ -39,6 +39,7 @@ func fetchData() {
         // .dataTask - Создает задачу, которая извлекает содержимое указанного URL-адреса, а затем вызывает обработчик по завершении.
         let task = session.dataTask(with: url) { data, response, error in
             if error == nil {
+                // Вызываем метод по декодированию данных
                 decodeData(data: data)
             } else {
                 print(error!)
