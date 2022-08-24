@@ -41,7 +41,7 @@ class WeatherViewController: UIViewController {
 }
 ```
 
-## 4. Расширение подписывающее структуру №2 под протокол делегата
+## 4. Создаем расширение подписывающее структуру №2 под протокол делегата
 
 ```Swift
 extension WeatherViewController: WeatherModelDelegate {   
