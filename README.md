@@ -5,3 +5,4 @@
 - [Жизненный цикл ViewController](ViewControllerLifecycle.md)
 - [Делегаты в Swift](Delegate.md)
 - [Работа c Realm](Realm.md)
+- [Загрузка изображения из URL-адреса, и отображение его в UIImageView] (ImageFromURL.md)
