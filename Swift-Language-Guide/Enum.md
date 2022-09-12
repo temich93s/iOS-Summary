@@ -184,7 +184,8 @@ enum ArithmeticExpression {
                 return evaluate( valueLeft ) + evaluate( valueRight )
             case .subtraction( let valueLeft, let valueRight ):
                 return evaluate( valueLeft ) - evaluate( valueRight )
-} }
+        }
+    }
 }
 let hardExpr = ArithmeticExpression.addition( .number(20), .subtraction( .number(10), .number(34) ) )
 hardExpr.evaluate() // -4
