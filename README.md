@@ -1,5 +1,6 @@
 # Набор мини-статей по iOS Разработке:
 > (В процессе разработки, могут быть неточности/опечатки)
+- [Swift-Language-Guide](Swift-Language-Guide)
 - [Clean Code: Оформление и структура класса](Clean-code.md)
 - [Работа с сетью](Networking.md)
 - [Жизненный цикл ViewController](ViewControllerLifecycle.md)
