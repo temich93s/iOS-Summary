@@ -7,3 +7,4 @@
 - [Subscript (Сабскрипты)](Subscript.md)
 - [Optional chaining (Опциональная цепочка)](Optional-Chaining.md)
 - [Type Casting (Приведение типов)](Type-Casting.md)
+- [ARC (Автоматический подсчет ссылок)](ARC.md)
