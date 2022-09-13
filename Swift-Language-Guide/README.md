@@ -6,3 +6,4 @@
 - [Struct & Class (Структуры и Классы)](Struct-Class.md)
 - [Subscript (Сабскрипты)](Subscript.md)
 - [Optional chaining (Опциональная цепочка)](Optional-Chaining.md)
+- [Type Casting (Приведение типов)](Type-Casting.md)
