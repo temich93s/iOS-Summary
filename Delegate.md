@@ -67,3 +67,44 @@ extension WeatherViewController: WeatherModelDelegate {
     }
 }
 ```
+
+## 5. Пример делегата между классами
+
+### ProductDelegate
+
+```Swift
+protocol ProductDelegate: AnyObject {
+    func addProduct(product: String)
+}
+```
+
+### ViewController1
+
+```Swift
+class ViewController1: UIViewController {
+    let secondVC = ViewController2()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()  
+        secondVC.delegate = self
+    }
+}
+
+extension ViewController1: ProductDelegate {
+    func addProduct(product: String) {
+        label.text = product
+    }
+}
+```
+
+### ViewController2
+```Swift
+class ViewController2: UIViewController {
+    weak var delegate: ProductDelegate?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()  
+        delegate?. addProduct(product: "Продукт")
+    }
+}
+```
