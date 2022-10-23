@@ -70,6 +70,11 @@ extension WeatherViewController: WeatherModelDelegate {
 
 ## 5. Пример делегата между классами
 
+- ViewController1 - делегат 
+- ViewController2 - делегирует полномочия
+- Протокол тут только для классов
+- Делегат имеет слабую ссылку, что бы не было утечки памяти
+
 ### ProductDelegate
 
 ```Swift
