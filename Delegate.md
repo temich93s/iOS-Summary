@@ -104,7 +104,7 @@ class ViewController2: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()  
-        delegate?. addProduct(product: "Продукт")
+        delegate?.addProduct(product: "Продукт")
     }
 }
 ```
