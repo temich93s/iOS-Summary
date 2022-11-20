@@ -330,7 +330,7 @@ func search(name: String) -> Bool {
                 print("\(person!) is a mango seller!")
                 return true
             } else {
-				  // если не продает то добавляем его друзей в очередь
+		// если не продает то добавляем его друзей в очередь
                 for string in graph[person!]! {
                     searchQueue.enqueue(string)
                 }
