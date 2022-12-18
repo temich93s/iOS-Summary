@@ -11,7 +11,60 @@ import PlaygroundSupport
 PlaygroundPage.current.needsIndefiniteExecution = true
 ```
 
-# :red_square: Class OperationQueue
+# :red_square: class Operation: NSObject
+
+# :red_square: class BlockOperation: Operation
+
+- BlockOperation - это конкретный подкласс Operation, который управляет параллельным выполнением одним или несколькиими блоками. Вы можете использовать этот объект для выполнения нескольких блоков одновременно без необходимости создавать отдельные объекты операции для каждого. 
+- При выполнении нескольких блоков сама операция считается завершенной только тогда, когда все блоки завершили выполнение.
+- Блоки, добавленные в BlockOperation, отправляются с приоритетом по умолчанию в соответствующую рабочую очередь. Сами блоки не должны делать никаких предположений о конфигурации своей среды выполнения.
+- **BlockOperation** - По сути это группировка нескольких операций вместе, что бы их потом пачкой передать в OperationQueue.
+- Операции внутри блока выполняются ВСЕГДА параллельно даже если они добавлены в мейн очередь
+```Swift
+// создание блока операций
+let blockOperation = BlockOperation()
+
+// создание блока операций
+let blockOperation1 = BlockOperation {
+    print("BO1")
+}
+
+// Добавление операций в блок
+blockOperation1.addExecutionBlock {
+    print("BO2")
+}
+
+// var executionBlocks: [() -> Void] { get }
+// .executionBlocks - это массив блоков добавленых в BlockOperation
+print(blockOperation1.executionBlocks.count) // = 2
+```
+
+### !Операции внутри блока выполняются ВСЕГДА параллельно даже если они добавлены в мейн очередь
+```Swift
+// Результат: 1 2 BO1 BO2 3 BO3
+let blockOperation = BlockOperation {
+    print("3")
+    sleep(1)
+    print("BO3")
+}
+
+let blockOperation1 = BlockOperation {
+    print("1")
+    sleep(1)
+    print("BO1")
+}
+
+blockOperation1.addExecutionBlock {
+    print("2")
+    sleep(1)
+    print("BO2")
+}
+
+OperationQueue.main.addOperation(blockOperation1)
+OperationQueue.main.addOperation(blockOperation)
+```
+
+# :red_square: class OperationQueue: NSObject
 
 - OperationQueue - Очередь, которая регулирует выполнение операций.
 - OperationQueue организует и вызывает свои операции в соответствии с их готовностью, уровнем приоритета и зависимостями взаимодействия. Если все операции в очереди имеют один и тот же приоритет очереди и свойство isReady возвращает true, очередь вызывает их в том порядке, в котором вы их добавили. В противном случае очередь операций всегда вызывает операцию с наивысшим приоритетом по сравнению с другими готовыми операциями.
@@ -70,12 +123,6 @@ operationQueue.maxConcurrentOperationCount = 2
 operationQueue.addOperation(opSleep5Sec)
 operationQueue.addOperation(opSleep2Sec)
 operationQueue.addOperation(opSleep4Sec)
-```
-
-
-### func addOperation(Operation)
-```Swift
-
 ```
 
 ### func addOperation(Operation)
