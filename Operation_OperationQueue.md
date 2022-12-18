@@ -13,6 +13,103 @@ PlaygroundPage.current.needsIndefiniteExecution = true
 
 # :red_square: class Operation: NSObject
 
+- Operation - Абстрактный класс, представляющий код и данные, связанные с одной задачей.
+- Мы не используем напрямую этот класс, а мы создаем наследник этого класса где переопределяем необходимые методы и свойства или используем один из подсистемных подклассов (NSInvocationOperation или BlockOperation)
+- Несмотря на абстрактность, базовая реализация Operation включает в себя значительную логику для координации безопасного выполнения вашей задачи. Наличие этой встроенной логики позволяет вам сосредоточиться на фактической реализации вашей задачи, а не на клеевом коде, необходимом для обеспечения его правильной работы с другими объектами системы.
+- Объект операции - это односъемный объект, то есть он выполняет свою задачу один раз и **не может быть использован для ее повторного выполнения**. Обычно операции выполняются, добавляя их в очередь операций (экземпляр класса OperationQueue).
+- Если вы не хотите использовать очередь операций, вы можете выполнить операцию самостоятельно, вызвав ее метод start() непосредственно из вашего кода. Выполнение операций вручную возлагает большую нагрузку на ваш код, потому что запуск операции, которая не находится в состоянии готовности, вызывает исключение. Свойство isReady сообщает о готовности операции.
+
+```Swift
+// создание операции
+class OpSleep2Sec: Operation {
+	// мы переапределяем функцию main и пишем наш необходимый код
+    override func main() {
+        if isCancelled {
+            print(isCancelled)
+            return
+        }
+        sleep(2)
+        if isCancelled {
+            print(isCancelled)
+            return
+        }
+        print("opSleep2Sec")
+    }
+}
+let opSleep2Sec = OpSleep2Sec()
+
+// Запуск операции
+opSleep2Sec.start()
+
+// Отмена операции (устанавливается isCancelled = true)
+opSleep2Sec.cancel()
+
+// var completionBlock: (() -> Void)?
+// Комплишн блок
+opSleep2Sec.completionBlock = {
+    print("completionBlock")
+}
+
+// задание приоритета операции
+opSleep2Sec.qualityOfService = .background
+```
+
+### Статусы операции
+```Swift
+var isCancelled: Bool
+//Логическое значение, указывающее, была ли операция отменена
+
+var isExecuting: Bool
+// Логическое значение, указывающее, выполняется ли операция в настоящее время.
+
+var isFinished: Bool
+// Логическое значение, указывающее, завершила ли операция выполнение своей задачи.
+
+var isConcurrent: Bool
+// Логическое значение, указывающее, выполняет ли операция свою задачу асинхронно.
+
+var isAsynchronous: Bool
+// Логическое значение, указывающее, выполняет ли операция свою задачу асинхронно.
+
+var isReady: Bool
+// Логическое значение, указывающее, можно ли выполнить операцию сейчас.
+
+var name: String?
+// Название операции.
+```
+
+### Зависимости
+- Зависимости - это удобный способ выполнения операций в определенном порядке. Вы можете добавлять и удалять зависимости для операции с помощью методов addDependency(_:) и removeDependency(_:). По умолчанию объект операции, имеющий зависимости, не считается готовым до тех пор, пока все его зависимые объекты операции не закончат выполнение. Однако после завершения последней зависимой операции объект операции становится готовым и способным к выполнению.
+- Зависимости, поддерживаемые NSOperation, не делают различий в том, завершена ли зависимая операция успешно или неудачно. (Другими словами, отмена операции аналогичным образом помечает ее как завершенную.) Вам решать, должна ли операция с зависимостями выполняться в тех случаях, когда ее зависимые операции были отменены или не завершили свою задачу успешно. Это может потребовать включения некоторых дополнительных возможностей отслеживания ошибок в ваши операционные объекты.
+
+```Swift
+// func addDependency(Operation)
+// устанавиливает зависимость между операциями. opSleep2Sec не начнет свое выполнение пока opSleep3Sec не завершит свое выполнение
+// результат -1- -2- opSleep1Sec opSleep3Sec opSleep2Sec
+opSleep2Sec.addDependency(opSleep3Sec)
+print("-1-")
+operationQueue.addOperation(opSleep3Sec)
+operationQueue.addOperation(opSleep2Sec)
+operationQueue.addOperation(opSleep1Sec)
+print("-2-")
+
+// func removeDependency(Operation)
+// удаляет зависимость
+// результат -1- -2- opSleep1Sec opSleep2Sec opSleep3Sec
+opSleep2Sec.addDependency(opSleep3Sec)
+opSleep2Sec.removeDependency(opSleep3Sec)
+print("-1-")
+operationQueue.addOperation(opSleep3Sec)
+operationQueue.addOperation(opSleep2Sec)
+operationQueue.addOperation(opSleep1Sec)
+print("-2-")
+
+// var dependencies: [Operation]
+// Описывает какие зависимости есть у операции
+print(opSleep2Sec.dependencies)
+// результат: [<__lldb_expr_113.OpSleep3Sec 0x6000033e0e00 isFinished=NO isReady=YES isCancelled=NO isExecuting=NO>]
+```
+
 # :red_square: class BlockOperation: Operation
 
 - BlockOperation - это конкретный подкласс Operation, который управляет параллельным выполнением одним или несколькиими блоками. Вы можете использовать этот объект для выполнения нескольких блоков одновременно без необходимости создавать отдельные объекты операции для каждого. 
@@ -37,6 +134,19 @@ blockOperation1.addExecutionBlock {
 // var executionBlocks: [() -> Void] { get }
 // .executionBlocks - это массив блоков добавленых в BlockOperation
 print(blockOperation1.executionBlocks.count) // = 2
+
+// func waitUntilFinished()
+// блокирует выполение кода пока не выполнится указанная операция
+// результат: -1- -2- -3- opSleep2Sec opSleep3Sec (- тут код на opSleep3Sec останавливается пока не выполнится opSleep3SecБ после печати opSleep3Sec) далее печатается -4- -5- opSleep1Sec
+print("-1-")
+operationQueue.addOperation(opSleep3Sec)
+print("-2-")
+operationQueue.addOperation(opSleep2Sec)
+print("-3-")
+opSleep3Sec.waitUntilFinished()
+print("-4-")
+operationQueue.addOperation(opSleep1Sec)
+print("-5-")
 ```
 
 ### !Операции внутри блока выполняются ВСЕГДА параллельно даже если они добавлены в мейн очередь
@@ -74,7 +184,6 @@ OperationQueue.main.addOperation(blockOperation)
 ## Заметки (надо доразобраться почему так):
 - Нельзя одну и туже операцию добавлять в разные очереди (вылетает ошибка)
 - Нельзя одну и туже операцию добавлять несколько раз в одну и туже очередь, что поочередного выполнения что для одновремменного выполнения
-
 
 ### Основное
 ```Swift
